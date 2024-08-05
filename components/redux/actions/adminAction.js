@@ -19,7 +19,7 @@ export const handleGetDateUser = () => {
                 console.log("Gia tri can tim ", res)
                 dispatch({
                     type: actionTypes.GET_DATA_USER,
-                    data: res.data,
+                    data: res,
                     // errMessage: res.errMessage,
                     // token: res.token1
 
