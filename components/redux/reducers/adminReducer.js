@@ -7,7 +7,9 @@ const initialState = {
     errMessage: '',
     userInfo1: null,
     errMessagePosts: '',
-    dataUser: null
+    dataUser: null,
+
+    errMessageCreateUser: '',
 
 
 
@@ -40,6 +42,14 @@ const adminReducer = (state = initialState, action) => {
             }
         case actionTypes.USER_SIGNUP_FAIL:
             state.errMessage = action.errMessage
+
+            console.log('action', action)
+
+            return {
+                ...state,
+            }
+        case actionTypes.CREATE_USER_API:
+            state.errMessageCreateUser = action.errMessage
 
             console.log('action', action)
 

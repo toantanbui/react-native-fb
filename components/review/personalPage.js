@@ -127,7 +127,9 @@ const PersonalScreen = () => {
                                 borderRadius: 50,
 
                             }}
-                            source={require("../images/star.png")} />
+                            source={require("../images/star.png")}
+
+                        />
                         <Pressable style={{
                             // borderColor: "#dde2e7",
                             // borderWidth: 2,
@@ -141,14 +143,16 @@ const PersonalScreen = () => {
 
 
 
-                        }}>
+                        }}
+                            onPress={() => { navigation.navigate("posting") }}
+                        >
 
                             <Text style={{
 
                                 fontWeight: "600",
                                 fontSize: 20,
                                 marginLeft: 10
-                            }}>Đăng cập nhập trại thái</Text>
+                            }}>Đăng cập nhập trạng thái</Text>
                         </Pressable >
                         <AntDesign name="picture" size={24} color="black" />
                     </View>
@@ -156,7 +160,7 @@ const PersonalScreen = () => {
                 <View>
                     {list.map((item, index) => {
                         return (
-                            <PostsScreen />
+                            <PostsScreen key={index} />
                         )
 
                     })}

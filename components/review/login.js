@@ -87,7 +87,7 @@ const LoginScreen = () => {
                         borderWidth: 2,
                         height: 60,
                         borderRadius: 10,
-                        color: "#bac3ca",
+                        // color: "#bac3ca",
                         fontWeight: "600",
                         fontSize: 15,
                         padding: 10,
@@ -111,7 +111,7 @@ const LoginScreen = () => {
                         borderRadius: 30
 
                     }}
-                        onPress={() => { navigation.navigate("PersonalPage") }}
+                        onPress={() => { navigation.navigate("homefb") }}
                     >
                         <Text>Đăng nhập</Text>
                     </Pressable >

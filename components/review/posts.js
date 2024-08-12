@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
         fontSize: 10,
         color: "red",
         height: "auto",
-        borderWidth: 2,
+        borderBottomWidth: 2,
         borderColor: "black",
         marginBottom: 10
 
@@ -23,23 +23,29 @@ const PostsScreen = () => {
         <View style={styles.container}>
             <View style={{
                 height: 70,
-                borderWidth: 2,
+                borderBottomWidth: 2,
                 borderColor: "#dde2e7",
                 flexDirection: "row",
                 justifyContent: 'space-between',
                 alignItems: "center",
                 padding: 10
             }}>
-                <Image
-                    style={{
-                        height: 50,
-                        width: 50,
-                        borderWidth: 2,
-                        borderColor: "red",
-                        borderRadius: 50,
+                <Pressable
+                    onPress={() => { navigation.navigate("PersonalPage") }}
+                >
+                    <Image
+                        style={{
+                            height: 50,
+                            width: 50,
+                            borderWidth: 2,
+                            borderColor: "red",
+                            borderRadius: 50,
 
-                    }}
-                    source={require("../images/star.png")} />
+                        }}
+                        source={require("../images/star.png")}
+
+                    />
+                </Pressable>
                 <View style={{
                     // borderWidth: 2,
                     // borderColor: "red",
@@ -51,6 +57,7 @@ const PostsScreen = () => {
                         fontSize: 20,
                         fontWeight: "600"
                     }}
+                        onPress={() => { navigation.navigate("PersonalPage") }}
                     >Bùi Tấn Toàn</Text>
                     <Text style={{
 
@@ -74,6 +81,7 @@ const PostsScreen = () => {
                 }}
                 >noi dung bai viet</Text>
                 <Image
+
                     style={{
                         height: 300,
                         width: "100%",
@@ -82,7 +90,10 @@ const PostsScreen = () => {
 
 
                     }}
-                    source={require("../images/star.png")} />
+
+                    source={require("../images/star.png")}
+
+                />
 
             </View>
             <View style={{
@@ -101,14 +112,16 @@ const PostsScreen = () => {
             >
                 <Pressable style={{
                     // borderWidth: 2,
-                    backgroundColor: "#a0a4a6",
+                    backgroundColor: "#e3e6ed",
                     width: 110,
                     height: 40,
                     borderRadius: 20,
                     flexDirection: "row",
                     justifyContent: "center",
                     alignItems: "center"
-                }}>
+                }}
+
+                >
                     <AntDesign name="like2" size={24} color="black" />
                     <Text style={{
                         marginLeft: 5
@@ -117,14 +130,16 @@ const PostsScreen = () => {
                 </Pressable>
                 <Pressable style={{
                     // borderWidth: 2,
-                    backgroundColor: "#a0a4a6",
+                    backgroundColor: "#e3e6ed",
                     width: 110,
                     height: 40,
                     borderRadius: 20,
                     flexDirection: "row",
                     justifyContent: "center",
                     alignItems: "center"
-                }}>
+                }}
+                    onPress={() => { navigation.navigate("Posts_infor") }}
+                >
                     <Feather name="message-circle" size={24} color="black" />
                     <Text style={{
                         marginLeft: 5
@@ -135,7 +150,7 @@ const PostsScreen = () => {
                 </Pressable>
                 <Pressable style={{
                     // borderWidth: 2,
-                    backgroundColor: "#a0a4a6",
+                    backgroundColor: "#e3e6ed",
                     width: 110,
                     height: 40,
                     borderRadius: 20,

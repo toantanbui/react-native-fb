@@ -1,9 +1,16 @@
 import instance from "./axios";
 
 const getDataUser = () => {
-    return instance.get('http://192.168.1.4:8080/getUser');
+    return instance.get('/getUser');
 }
 
+const createUserApi = (data) => {
+    return instance.post('/createUser', data);
+}
+
+
+
+
 export {
-    getDataUser
+    getDataUser, createUserApi
 }

@@ -1,7 +1,7 @@
 import actionTypes from "./actionTypes";
 
 import {
-    getDataUser
+    getDataUser, createUserApi
 
 } from '../../service'
 
@@ -41,3 +41,29 @@ export const handleGetDateUser = () => {
     }
 }
 
+export const handleCreateUser = (data) => {
+    console.log("data send", data)
+    return async (dispatch, getState) => {
+        try {
+            let res = await createUserApi(data);
+
+
+
+            dispatch({
+                type: actionTypes.CREATE_USER_API,
+
+                errMessage: res.data.errMessage,
+                // token: res.token1
+
+            })
+
+
+
+
+
+        } catch (e) {
+            console.log(e)
+
+        }
+    }
+}

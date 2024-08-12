@@ -1,6 +1,9 @@
 import { View, Text, StyleSheet, Button, TextInput } from "react-native"
 import { useNavigation, useRoute } from "@react-navigation/native";
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { useState } from "react";
+import * as actions from '../redux/actions';
+import { useSelector, useDispatch } from 'react-redux';
 
 
 const styles = StyleSheet.create({
@@ -57,6 +60,52 @@ const styles = StyleSheet.create({
 
 const SignupScreen = () => {
     const navigation = useNavigation()
+    const dispatch = useDispatch()
+    let errMessageCreateUser = useSelector(state => state.admin.errMessageCreateUser)
+
+    const [email, setEmail] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [password, setPassword] = useState('');
+
+    const onChangeInputEmail = (event) => {
+        let data = event.nativeEvent.text
+        console.log("data la", data)
+        setEmail(data)
+    }
+    const onChangeInputLastName = (event) => {
+        let data = event.nativeEvent.text
+        console.log("data la", data)
+        setLastName(data)
+    }
+    const onChangeInputFirstName = (event) => {
+        let data = event.nativeEvent.text
+        console.log("data la", data)
+        setFirstName(data)
+    }
+    const onChangeInputPassword = (event) => {
+        let data = event.nativeEvent.text
+        console.log("data la", data)
+        setPassword(data)
+    }
+
+    const handleCreateUser = () => {
+        dispatch(actions.handleCreateUser({
+            lastName: lastName,
+            firstName: firstName,
+            email: email,
+            password: password
+
+        }))
+        setEmail('')
+        setFirstName('')
+        setLastName('')
+        setPassword('')
+    }
+
+
+
+
     return (
         <View style={styles.container}>
             <View style={styles.container_route}>
@@ -83,13 +132,29 @@ const SignupScreen = () => {
                     <Text style={{
 
                     }}>Họ</Text>
-                    <TextInput />
+                    <TextInput
+                        onChange={(event) => onChangeInputLastName(event)}
+                        style={{
+                            borderBottomWidth: 2,
+                            borderBottomColor: "black"
+
+                        }}
+                        value={lastName}
+                    />
                 </View>
                 <View style={styles.container_content_input}>
                     <Text style={{
 
                     }}>Tên</Text>
-                    <TextInput />
+                    <TextInput
+                        onChange={(event) => onChangeInputFirstName(event)}
+                        style={{
+                            borderBottomWidth: 2,
+                            borderBottomColor: "black"
+
+                        }}
+                        value={firstName}
+                    />
                 </View>
                 <View style={{
                     borderColor: "#c1c8d0",
@@ -104,7 +169,15 @@ const SignupScreen = () => {
                     <Text style={{
 
                     }}>Email</Text>
-                    <TextInput />
+                    <TextInput
+                        onChange={(event) => onChangeInputEmail(event)}
+                        style={{
+                            borderBottomWidth: 2,
+                            borderBottomColor: "black"
+
+                        }}
+                        value={email}
+                    />
                 </View>
                 <View style={{
                     borderColor: "#c1c8d0",
@@ -120,7 +193,15 @@ const SignupScreen = () => {
                     <Text style={{
 
                     }}>Mật khẩu</Text>
-                    <TextInput />
+                    <TextInput
+                        onChange={(event) => onChangeInputPassword(event)}
+                        style={{
+                            borderBottomWidth: 2,
+                            borderBottomColor: "black"
+
+                        }}
+                        value={password}
+                    />
                 </View>
 
 
@@ -130,8 +211,15 @@ const SignupScreen = () => {
             </View>
             <View >
                 <Button title="sign up"
-                //  color="red"
+                    onPress={() => handleCreateUser()}
                 />
+                <Text
+                    style={{
+                        color: "red",
+                        paddingTop: 10,
+                        fontSize: 20
+                    }}
+                >{errMessageCreateUser}</Text>
             </View>
 
         </View>
