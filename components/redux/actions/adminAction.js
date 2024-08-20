@@ -1,7 +1,7 @@
 import actionTypes from "./actionTypes";
 
 import {
-    getDataUser, createUserApi
+    getDataUser, createUserApi, LoginUserApi, handleGetPostByTimeApi
 
 } from '../../service'
 
@@ -67,3 +67,68 @@ export const handleCreateUser = (data) => {
         }
     }
 }
+
+export const handleLogin = (data) => {
+    console.log("data send", data)
+    return async (dispatch, getState) => {
+        try {
+            let res = await LoginUserApi(data);
+
+            if (res.data.errCode === 0) {
+                dispatch({
+                    type: actionTypes.USER_LOGIN_SUCCESS,
+                    errMessage: res.data.errMessage,
+                    data: res.data.data,
+                    token: res.data.token
+                    // token: res.token1
+
+                })
+            } else {
+                dispatch({
+                    type: actionTypes.USER_LOGIN_FAIL,
+                    errMessage: res.data.errMessage,
+                    data: res.data
+
+                    // token: res.token1
+
+                })
+
+            }
+
+
+
+
+
+
+
+        } catch (e) {
+            console.log(e)
+
+        }
+    }
+}
+
+export const handleGetPostByTime = () => {
+
+    return async (dispatch, getState) => {
+        try {
+            let res = await handleGetPostByTimeApi();
+
+            if (res.data.errCode === 0) {
+                dispatch({
+                    type: actionTypes.GET_POSTS_BY_TIME,
+                    errMessage: res.data.errMessage,
+                    data: res.data.data,
+
+
+                })
+            }
+
+
+        } catch (e) {
+            console.log(e)
+
+        }
+    }
+}
+

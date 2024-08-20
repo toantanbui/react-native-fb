@@ -1,11 +1,13 @@
-import { View, Text, StyleSheet, Button, Pressable, Image, ScrollView } from "react-native"
+import { View, Text, StyleSheet, Button, Pressable, Image, ScrollView, FlatList } from "react-native"
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Feather from '@expo/vector-icons/Feather';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import PostsScreen from "./posts";
+import { useSelector, useDispatch } from 'react-redux';
+import * as actions from '../redux/actions';
 const styles = StyleSheet.create({
     container: {
         fontSize: 10,
@@ -16,8 +18,30 @@ const styles = StyleSheet.create({
 
 
 const HomefbScreen = () => {
+
     const navigation = useNavigation()
-    const [list, setList] = useState([1, 1, 2, 3, 2, 12, 312, 312, 312, 2312])
+    //const [list, setList] = useState([1, 1, 2, 3, 2, 12, 312, 312, 312, 2312])
+    const dispatch = useDispatch()
+
+    let dataGetPostsByTimeRedux = useSelector(state => state.admin.dataGetPostsByTime)
+    const [list, setList] = useState([]);
+
+    useEffect(() => {
+        dispatch(actions.handleGetPostByTime({}))
+    }, [])
+
+    useEffect(() => {
+
+        setList(dataGetPostsByTimeRedux)
+
+    }, [dataGetPostsByTimeRedux])
+
+
+
+
+
+
+
     return (
         <View style={styles.container}>
             <View style={{
@@ -129,66 +153,76 @@ const HomefbScreen = () => {
                 </View>
             </View>
 
-            <ScrollView>
-                <View style={{
-                    flexDirection: 'row',
-                    borderBottomWidth: 3,
-                    borderBottomColor: "#bebdc1",
-                    height: "auto",
-                    padding: 10,
-                    justifyContent: 'space-between',
-                    alignItems: 'center'
-                }}>
-                    <Pressable
+
+            <View style={{
+                flexDirection: 'row',
+                borderBottomWidth: 3,
+                borderBottomColor: "#bebdc1",
+                height: "auto",
+                padding: 10,
+                justifyContent: 'space-between',
+                alignItems: 'center'
+            }}>
+                <Pressable
+                    onPress={() => { navigation.navigate("PersonalPage") }}
+                >
+                    <Image
+                        style={{
+                            height: 50,
+                            width: 50,
+                            borderWidth: 2,
+                            borderColor: "red",
+                            borderRadius: 50,
+
+                        }}
+                        source={require("../images/star.png")}
                         onPress={() => { navigation.navigate("PersonalPage") }}
-                    >
-                        <Image
-                            style={{
-                                height: 50,
-                                width: 50,
-                                borderWidth: 2,
-                                borderColor: "red",
-                                borderRadius: 50,
-
-                            }}
-                            source={require("../images/star.png")}
-                            onPress={() => { navigation.navigate("PersonalPage") }}
-                        />
-                    </Pressable>
-                    <Pressable style={{
-                        // borderColor: "#dde2e7",
-                        // borderWidth: 2,
-                        height: 50,
-                        width: 250,
-                        backgroundColor: "#e3e6ed",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        borderRadius: 20,
-                        flexDirection: 'row',
+                    />
+                </Pressable>
+                <Pressable style={{
+                    // borderColor: "#dde2e7",
+                    // borderWidth: 2,
+                    height: 50,
+                    width: 250,
+                    backgroundColor: "#e3e6ed",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRadius: 20,
+                    flexDirection: 'row',
 
 
 
-                    }}
-                        onPress={() => { navigation.navigate("posting") }}
-                    >
+                }}
+                    onPress={() => { navigation.navigate("posting") }}
+                >
 
-                        <Text style={{
+                    <Text style={{
 
-                            fontWeight: "600",
-                            fontSize: 20,
-                            marginLeft: 10
-                        }}>Đăng cập nhập trạng thái</Text>
-                    </Pressable >
-                    <AntDesign name="picture" size={24} color="black" />
-                </View>
-                {
+                        fontWeight: "600",
+                        fontSize: 20,
+                        marginLeft: 10
+                    }}>Đăng cập nhập trạng thái</Text>
+                </Pressable >
+                <AntDesign name="picture" size={24} color="black" />
+            </View>
+
+            <FlatList
+                data={list}
+                renderItem={({ item, index }) => {
+                    return (
+                        <PostsScreen key={index} />
+                    )
+                }}
+
+            />
+            {/* {
                     list.map((item, index) => {
                         return (
-                            <PostsScreen key={index} />
+                           
                         )
                     })
-                }
-            </ScrollView>
+                } */}
+
         </View>
     )
 }

@@ -10,6 +10,7 @@ const initialState = {
     dataUser: null,
 
     errMessageCreateUser: '',
+    dataGetPostsByTime: null
 
 
 
@@ -23,35 +24,20 @@ const adminReducer = (state = initialState, action) => {
     switch (action.type) {
 
 
-        case actionTypes.GET_DATA_USER:
+        case actionTypes.CREATE_USER_API:
 
-            state.dataUser = action.data
+            state.errMessageCreateUser = action.errMessage
 
             console.log('action', action.data)
 
             return {
                 ...state,
             }
-        case actionTypes.USER_SIGNUP_SUCCESS:
-            state.errMessage = action.errMessage
+        case actionTypes.GET_POSTS_BY_TIME:
 
-            console.log('action', action)
+            state.dataGetPostsByTime = action.data
 
-            return {
-                ...state,
-            }
-        case actionTypes.USER_SIGNUP_FAIL:
-            state.errMessage = action.errMessage
-
-            console.log('action', action)
-
-            return {
-                ...state,
-            }
-        case actionTypes.CREATE_USER_API:
-            state.errMessageCreateUser = action.errMessage
-
-            console.log('action', action)
+            console.log('action', action.data)
 
             return {
                 ...state,
