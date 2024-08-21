@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
 })
 
 
-const PostsScreen = () => {
+const PostsScreen = (props) => {
     const navigation = useNavigation()
     return (
         <View style={styles.container}>
@@ -58,12 +58,12 @@ const PostsScreen = () => {
                         fontWeight: "600"
                     }}
                         onPress={() => { navigation.navigate("PersonalPage") }}
-                    >Bùi Tấn Toàn</Text>
+                    >{props.lastName} {props.firstName}</Text>
                     <Text style={{
 
                     }}
 
-                    >Thời gian</Text>
+                    >{props.time}</Text>
                 </View>
                 <MaterialCommunityIcons name="dots-horizontal" size={24} color="black" />
             </View>
@@ -79,7 +79,7 @@ const PostsScreen = () => {
                     minHeight: 100,
                     fontSize: 20
                 }}
-                >noi dung bai viet</Text>
+                >{props.postsContent}</Text>
                 <Image
 
                     style={{

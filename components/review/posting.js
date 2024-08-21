@@ -1,6 +1,15 @@
 import { View, Text, StyleSheet, Button, Pressable, Image, TextInput } from "react-native"
 import { useNavigation, useRoute } from "@react-navigation/native";
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from 'react-redux';
+import * as actions from '../redux/actions';
+import { storeData, getData, removeValue } from '../storage/asyncStorage'
+//buffer để chuyen dang binary sang string
+import { Buffer } from 'buffer';
+
+import * as ImagePicker from 'expo-image-picker';
+
 const styles = StyleSheet.create({
     container: {
         // borderWidth: 1,
@@ -12,8 +21,71 @@ const styles = StyleSheet.create({
 
 const PostingScreen = () => {
     const navigation = useNavigation()
+    const dispatch = useDispatch()
+
+    const [idUsers, setIdUsers] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [firsttName, setFirstName] = useState('');
+    const [avatar, setAvatar] = useState('');
+
+    const [postsName, setPostsName] = useState('');
+    const [postsContent, setPostsContent] = useState('');
+    const [postsImage, setPostsImage] = useState('data:image/png;base64,');
+    let userInfoRedux = useSelector(state => state.admin.userInfo)
+
+    useEffect(() => {
+        getData('userInfo')
+            .then(data => {
+                let dataStorage = JSON.parse(data)
+                console.log("isLoggendIn", dataStorage.idUser)
+                dispatch(actions.handleGetUserInfo({ idUsers: dataStorage.idUser }))
+                setIdUsers(dataStorage.idUser)
+            })
+            .catch((e) => {
+                console.log(e)
+            })
+
+
+    }, [])
+
+    useEffect(() => {
+        if (userInfoRedux !== null) {
+            console.log('posting ', userInfoRedux)
+            setLastName(userInfoRedux[0].lastName)
+            setFirstName(userInfoRedux[0].firsttName)
+            setPostsName(userInfoRedux[0].postsName)
+            setPostsContent(userInfoRedux[0].postsContent)
+        }
+
+    }, [userInfoRedux])
+
+    const selectImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+            base64: true,
+        });
+
+        console.log("base64 la", result.assets[0].base64, " xin chao");
+        //let a = new Buffer(result.assets[0].base64, 'base64').toString('binary')
+
+        if (!result.canceled) {
+            // setPostsImage(result.assets[0].uri);
+            setPostsImage(postsImage + result.assets[0].base64);
+        }
+    };
+
+
+
+
+
+
+
     return (
         <View style={styles.container}>
+            {console.log('postsImage', postsImage, 'file anh')}
             <View style={{
                 // borderWidth: 1,
                 // borderColor: "red",
@@ -87,15 +159,31 @@ const PostingScreen = () => {
                 flexDirection: "row",
                 alignItems: "center"
             }}>
-                <AntDesign name="picture" size={24} color="black" />
+                <AntDesign name="picture" size={24} color="black"
+                    onPress={() => { selectImage() }}
+                />
                 <Text style={{
                     marginLeft: 10
-                }}>Ảnh/video</Text>
+                }}
+
+                >Ảnh/video</Text>
+            </Pressable>
+            <Pressable style={{
+                borderColor: 'red',
+                borderWidth: 1,
+                minHeight: 50
+            }}>
+                {postsImage && <Image source={{ uri: postsImage }} style={{
+                    minHeight: 50,
+                    width: 50
+                }} />}
             </Pressable>
             <View style={{
                 padding: 10
             }}>
-                <Button title="ĐĂNG" />
+                <Button title="ĐĂNG"
+
+                />
             </View>
         </View>
     )

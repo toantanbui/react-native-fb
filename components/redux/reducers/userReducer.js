@@ -18,7 +18,7 @@ const userReducer = (state = initialState, action) => {
             console.log('action', action)
             storeData('userInfo', {
                 isLoggedIn: true,
-                idUsers: action.data,
+                idUser: action.data,
                 token: action.token
             })
 

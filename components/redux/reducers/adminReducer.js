@@ -5,9 +5,8 @@ const initialState = {
     userInfo: null,
     UsersRedux: [],
     errMessage: '',
-    userInfo1: null,
-    errMessagePosts: '',
-    dataUser: null,
+
+
 
     errMessageCreateUser: '',
     dataGetPostsByTime: null
@@ -36,6 +35,15 @@ const adminReducer = (state = initialState, action) => {
         case actionTypes.GET_POSTS_BY_TIME:
 
             state.dataGetPostsByTime = action.data
+
+            console.log('action', action.data)
+
+            return {
+                ...state,
+            }
+        case actionTypes.GET_USER_INFO_API:
+
+            state.userInfo = action.data
 
             console.log('action', action.data)
 

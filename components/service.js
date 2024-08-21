@@ -16,9 +16,13 @@ const handleGetPostByTimeApi = () => {
     return instance.get('/getPostByTime');
 }
 
+const handleGeUserInfoApi = (data) => {
+    return instance.post('/getUserInfo', data);
+}
+
 
 
 
 export {
-    getDataUser, createUserApi, LoginUserApi, handleGetPostByTimeApi
+    getDataUser, createUserApi, LoginUserApi, handleGetPostByTimeApi, handleGeUserInfoApi
 }

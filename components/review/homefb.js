@@ -206,15 +206,30 @@ const HomefbScreen = () => {
                 <AntDesign name="picture" size={24} color="black" />
             </View>
 
-            <FlatList
-                data={list}
-                renderItem={({ item, index }) => {
-                    return (
-                        <PostsScreen key={index} />
-                    )
-                }}
+            <View style={{
+                height: 600
+            }}
+            >
 
-            />
+                <FlatList
+                    data={list}
+                    renderItem={({ item, index }) => {
+                        return (
+                            <PostsScreen key={index}
+                                firstName={item.firstName}
+                                lastName={item.lastName}
+                                avatar={item.avatar}
+                                postsName={item.postsName}
+                                postsContent={item.postsContent}
+                                postsImage={item.postsImage}
+                                comment={item.comment}
+                                time={item.createdAt}
+                            />
+                        )
+                    }}
+
+                />
+            </View>
             {/* {
                     list.map((item, index) => {
                         return (

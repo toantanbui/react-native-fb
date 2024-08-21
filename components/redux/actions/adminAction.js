@@ -1,7 +1,8 @@
 import actionTypes from "./actionTypes";
 
 import {
-    getDataUser, createUserApi, LoginUserApi, handleGetPostByTimeApi
+    getDataUser, createUserApi, LoginUserApi, handleGetPostByTimeApi,
+    handleGeUserInfoApi
 
 } from '../../service'
 
@@ -117,6 +118,30 @@ export const handleGetPostByTime = () => {
             if (res.data.errCode === 0) {
                 dispatch({
                     type: actionTypes.GET_POSTS_BY_TIME,
+                    errMessage: res.data.errMessage,
+                    data: res.data.data,
+
+
+                })
+            }
+
+
+        } catch (e) {
+            console.log(e)
+
+        }
+    }
+}
+
+export const handleGetUserInfo = (data1) => {
+
+    return async (dispatch, getState) => {
+        try {
+            let res = await handleGeUserInfoApi(data1);
+
+            if (res.data.errCode === 0) {
+                dispatch({
+                    type: actionTypes.GET_USER_INFO_API,
                     errMessage: res.data.errMessage,
                     data: res.data.data,
 
