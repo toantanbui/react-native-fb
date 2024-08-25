@@ -6,10 +6,11 @@ import Feather from '@expo/vector-icons/Feather';
 import { useState, useEffect } from "react";
 import { Buffer } from 'buffer';
 import * as actions from '../redux/actions';
+import { storeData, getData, removeValue } from '../storage/asyncStorage'
 
 
 import { useSelector, useDispatch } from 'react-redux';
-import { storeData, getData, removeValue } from '../storage/asyncStorage'
+
 
 const styles = StyleSheet.create({
     container: {
@@ -24,16 +25,76 @@ const styles = StyleSheet.create({
 })
 
 
+let filerStatus = (arr, id) => {
+    let filer = []
+    filer = arr.filter((item, index) => {
+        return item.idUsers === id;
+    })
+
+    return filer;
+}
+
 const PostsScreen = (props) => {
     const navigation = useNavigation()
     const dispatch = useDispatch()
     const [postsImage, setPostsImage] = useState('');
     const [avatar, setAvatar] = useState('');
+    const [idUsers, setIdUsers] = useState('');
+    const [status, setStatus] = useState(false);
+    useEffect(() => {
 
+
+        getData('userInfo')
+            .then(data => {
+                let dataStorage = JSON.parse(data)
+                console.log("isLoggendIn", dataStorage.idUser)
+
+                setIdUsers(dataStorage.idUser)
+            })
+            .catch((e) => {
+                console.log(e)
+            })
+        if (props.likeStatus.length > 0) {
+
+            console.log('props.likeStatus', props.likeStatus)
+            let filter = []
+            filter = filerStatus(props.likeStatus, idUsers);
+            if (filter.length > 0) {
+                console.log('FILTER là', filter[0].status)
+                setStatus(filter[0].status)
+            }
+
+
+
+
+
+        }
+
+
+    }, [])
 
 
 
     useEffect(() => {
+
+        if (props.likeStatus.length > 0) {
+            let filter = []
+            console.log('props.likeStatus', props.likeStatus)
+            filter = filerStatus(props.likeStatus, idUsers);
+            console.log('FILTER là', filter, "xin chao")
+            if (filter.length > 0) {
+
+                setStatus(filter[0].status)
+            }
+
+
+
+
+
+        }
+
+
+
         let imageBase64 = '';
         if (props.postsImage) {
             imageBase64 = new Buffer(props.postsImage, 'base64').toString('binary')
@@ -59,7 +120,7 @@ const PostsScreen = (props) => {
 
 
 
-    }, [props.postsImage])
+    }, [props.postsImage, props.likeStatus])
 
     let date = new Date(props.time);
 
@@ -79,13 +140,31 @@ const PostsScreen = (props) => {
         )
     }
 
+    const handleCreateLikeStatus = (data) => {
 
+
+
+
+        dispatch(actions.handleCreateLikeStatus({
+
+            idUsers: idUsers,
+            idPosts: props.idPosts,
+            status: `${data}`
+
+
+        }))
+        setStatus(data)
+
+
+    }
 
 
 
 
     return (
         <View style={styles.container}>
+            {/* {console.log('mang duyet', filerStatus(props.likeStatus, idUsers))}
+            {console.log('id la', idUsers)} */}
             <View style={{
                 height: 70,
                 borderBottomWidth: 2,
@@ -185,13 +264,16 @@ const PostsScreen = (props) => {
                     justifyContent: "center",
                     alignItems: "center"
                 }}
-
+                    onPress={() => { handleCreateLikeStatus(!status) }}
                 >
-                    <AntDesign name="like2" size={24} color="black" />
+                    <AntDesign name="like2" size={24} color={status ? 'blue' : 'black'} />
                     <Text style={{
                         marginLeft: 5
-                    }}>{props.likes && props.likes.length}</Text>
+                    }}
 
+                    >{props.likes}</Text>
+                    {/* {console.log('likesStaus', props.likeStatus)} */}
+                    {/* {console.log('status', status)} */}
                 </TouchableOpacity>
                 <TouchableOpacity style={{
                     // borderWidth: 2,

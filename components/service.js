@@ -35,10 +35,15 @@ const handleCreateComment1Api = (data) => {
     return instance.post('/createComment1', data);
 }
 
+const handleCreateLikeStatusApi = (data) => {
+    return instance.post('/createlikePosts', data);
+}
+
 
 
 
 export {
     getDataUser, createUserApi, LoginUserApi, handleGetPostByTimeApi, handleGeUserInfoApi, handleCreatePostsApi,
-    handleGetPostsInfoApi, handleCreateCommentApi, handleCreateComment1Api
+    handleGetPostsInfoApi, handleCreateCommentApi, handleCreateComment1Api,
+    handleCreateLikeStatusApi
 }

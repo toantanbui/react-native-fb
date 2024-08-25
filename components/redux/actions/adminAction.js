@@ -3,7 +3,7 @@ import actionTypes from "./actionTypes";
 import {
     getDataUser, createUserApi, LoginUserApi, handleGetPostByTimeApi,
     handleGeUserInfoApi, handleCreatePostsApi, handleGetPostsInfoApi,
-    handleCreateCommentApi, handleCreateComment1Api
+    handleCreateCommentApi, handleCreateComment1Api, handleCreateLikeStatusApi
 
 } from '../../service'
 
@@ -253,6 +253,36 @@ export const handleCreateComment1 = (data1) => {
             }
 
             await dispatch(handleGetPostsInfo(data1))
+
+
+        } catch (e) {
+            console.log(e)
+
+        }
+    }
+}
+
+export const handleCreateLikeStatus = (data1) => {
+    console.log("request la ", data1)
+    return async (dispatch, getState) => {
+        try {
+            let res = await handleCreateLikeStatusApi(data1);
+
+            if (res.data.errCode === 0) {
+                dispatch({
+                    type: actionTypes.CREATE_COMMENT_API,
+                    errMessage: res.data.errMessage,
+
+
+
+                })
+            }
+
+            await dispatch(handleGetPostByTime())
+            await dispatch(handleGetPostsInfo({ idPosts: data1.idPosts }))
+
+
+
 
 
         } catch (e) {

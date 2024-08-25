@@ -25,6 +25,15 @@ const styles = StyleSheet.create({
     }
 })
 
+let filerStatus = (arr, id) => {
+    let filer = []
+    filer = arr.filter((item, index) => {
+        return item.idUsers === id;
+    })
+
+    return filer;
+}
+
 
 const Posts_inforScreen = () => {
     const [list, setList] = useState([1, 1, 2, 3, 2, 12, 312, 312, 312, 2312])
@@ -48,6 +57,8 @@ const Posts_inforScreen = () => {
     const [likes, setLikes] = useState(0);
     const [comment, setComment] = useState('');
 
+    const [status, setStatus] = useState(false);
+
     useEffect(() => {
 
 
@@ -69,6 +80,7 @@ const Posts_inforScreen = () => {
     }, [])
 
     useEffect(() => {
+
 
         if (userInfoRedux !== null) {
             console.log('posting ', userInfoRedux)
@@ -97,6 +109,23 @@ const Posts_inforScreen = () => {
             setTime(dataPostsInfoRedux[0].createAt)
             setPostsContent(dataPostsInfoRedux[0].postsContent)
             setComment(dataPostsInfoRedux[0].comment)
+            setLikes(dataPostsInfoRedux[0].likes)
+
+            if (dataPostsInfoRedux[0].likeStatus.length > 0) {
+
+                let filter = []
+                filter = filerStatus(dataPostsInfoRedux[0].likeStatus, idUsers);
+                console.log('FILTER là', filter, "xin chao", filter.length)
+                if (filter.length > 0) {
+
+                    setStatus(filter[0].status)
+                }
+
+
+
+
+
+            }
 
 
             let imageBase64 = '';
@@ -173,6 +202,24 @@ const Posts_inforScreen = () => {
         }))
         setCommentContent('')
         setCommentImage('')
+
+    }
+
+    const handleCreateLikeStatus = (data) => {
+
+
+
+
+        dispatch(actions.handleCreateLikeStatus({
+
+            idUsers: idUsers,
+            idPosts: idPosts,
+            status: `${data}`
+
+
+        }))
+        setStatus(data)
+
 
     }
 
@@ -274,8 +321,10 @@ const Posts_inforScreen = () => {
                         flexDirection: "row",
                         justifyContent: "center",
                         alignItems: "center"
-                    }}>
-                        <AntDesign name="like2" size={24} color="black" />
+                    }}
+                        onPress={() => { handleCreateLikeStatus(!status) }}
+                    >
+                        <AntDesign name="like2" size={24} color={status ? "blue" : "black"} />
                         <Text style={{
                             marginLeft: 5
                         }}>{likes}</Text>
@@ -290,7 +339,9 @@ const Posts_inforScreen = () => {
                         flexDirection: "row",
                         justifyContent: "center",
                         alignItems: "center"
-                    }}>
+                    }}
+
+                    >
                         <Feather name="message-circle" size={24} color="black" />
                         <Text style={{
                             marginLeft: 5

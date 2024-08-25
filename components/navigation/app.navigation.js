@@ -1,7 +1,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeScreen from "../review/home";
-import AboutScreen from "../review/about";
+
 import SignupScreen from "../review/signup";
 import LoginScreen from "../review/login";
 import PersonalScreen from "../review/personalPage";
@@ -9,7 +8,7 @@ import PostsScreen from "../review/posts";
 import Posts_inforScreen from "../review/posts_infor";
 import CommentScreen from "../review/comment";
 import HomefbScreen from "../review/homefb";
-import Comment1Screen from "../review/comment1";
+
 import PostingScreen from "../review/posting";
 import QR from "../qr";
 
@@ -24,12 +23,8 @@ export default function AppNavigation() {
                 <Stack.Screen name="Signup" component={SignupScreen}
                     options={{ title: "Signup", headerShown: false }}
                 />
-                <Stack.Screen name="Home" component={HomeScreen}
-                    options={{ title: "trang chủ", headerShown: false }}
-                />
-                <Stack.Screen name="About" component={AboutScreen}
-                    options={{ title: "About", headerShown: false }}
-                />
+
+
                 <Stack.Screen name="Login" component={LoginScreen}
                     options={{ title: "Login", headerShown: false }}
                 />
@@ -46,7 +41,7 @@ export default function AppNavigation() {
                     options={{ title: "Bình luận", headerShown: true }}
                 />
                 <Stack.Screen name="homefb" component={HomefbScreen}
-                    options={{ title: "bài viét", headerShown: false }}
+                    options={{ title: "trang chủ", headerShown: false }}
                 />
 
                 <Stack.Screen name="posting" component={PostingScreen}

@@ -21,10 +21,10 @@ const styles = StyleSheet.create({
 const HomefbScreen = () => {
 
     const navigation = useNavigation()
-    //const [list, setList] = useState([1, 1, 2, 3, 2, 12, 312, 312, 312, 2312])
+
     const dispatch = useDispatch()
     const map = new Map()
-    // map.set('list', useSelector(state => state.admin.dataGetPostsByTime))
+
 
     let dataGetPostsByTimeRedux = useSelector(state => state.admin.dataGetPostsByTime)
     const [list, setList] = useState([]);
@@ -211,7 +211,7 @@ const HomefbScreen = () => {
                             borderRadius: 50,
 
                         }}
-                        source={require("../images/star.png")}
+                        source={require("../images/anh.jpg")}
                         onPress={() => { navigation.navigate("PersonalPage") }}
                     />
                 </Pressable>
@@ -262,6 +262,9 @@ const HomefbScreen = () => {
                                 time={item.createdAt}
                                 likes={item.likes}
                                 idPosts={item._id}
+                                likeStatus={item.likeStatus}
+
+
                             />
                         )
                     }}
