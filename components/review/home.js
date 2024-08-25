@@ -24,7 +24,7 @@ const HomeScreen = () => {
 
     let data = useSelector(state => state.admin.dataUser)
     const navigation = useNavigation()
-    const [listTodo, setListTodo] = useState([])
+    const [listTodo, setListTodo] = useState([null])
 
 
     const handleCallApi = async () => {

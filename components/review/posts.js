@@ -1,8 +1,15 @@
-import { View, Text, StyleSheet, Button, Modal, Image, Pressable } from "react-native"
+import { View, Text, StyleSheet, Button, Modal, Image, Pressable, Alert, TouchableOpacity, } from "react-native"
 import { useNavigation, useRoute } from "@react-navigation/native";
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Feather from '@expo/vector-icons/Feather';
+import { useState, useEffect } from "react";
+import { Buffer } from 'buffer';
+import * as actions from '../redux/actions';
+
+
+import { useSelector, useDispatch } from 'react-redux';
+import { storeData, getData, removeValue } from '../storage/asyncStorage'
 
 const styles = StyleSheet.create({
     container: {
@@ -19,6 +26,64 @@ const styles = StyleSheet.create({
 
 const PostsScreen = (props) => {
     const navigation = useNavigation()
+    const dispatch = useDispatch()
+    const [postsImage, setPostsImage] = useState('');
+    const [avatar, setAvatar] = useState('');
+
+
+
+
+    useEffect(() => {
+        let imageBase64 = '';
+        if (props.postsImage) {
+            imageBase64 = new Buffer(props.postsImage, 'base64').toString('binary')
+            if (imageBase64) {
+
+
+                setPostsImage(imageBase64)
+
+            }
+        }
+        let imageBase641 = ''
+        if (props.avatar) {
+            imageBase641 = new Buffer(props.avatar, 'base64').toString('binary')
+            if (imageBase641) {
+
+
+                setAvatar(imageBase641)
+
+            }
+        }
+
+
+
+
+
+    }, [props.postsImage])
+
+    let date = new Date(props.time);
+
+
+    const handleDelete = () => {
+        Alert.alert("Xóa bài viết", "Bạn có chắc muốn xóa bài viết?",
+            [
+                {
+                    text: 'Cancel',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel'
+                },
+                {
+                    text: 'ok', onPress: () => console.log('ok Pressed')
+                }
+            ]
+        )
+    }
+
+
+
+
+
+
     return (
         <View style={styles.container}>
             <View style={{
@@ -63,9 +128,13 @@ const PostsScreen = (props) => {
 
                     }}
 
-                    >{props.time}</Text>
+                    >{date.toLocaleString()}</Text>
                 </View>
-                <MaterialCommunityIcons name="dots-horizontal" size={24} color="black" />
+                {console.log("idPost post", props.idPosts)}
+                <MaterialCommunityIcons name="dots-horizontal" size={24} color="black"
+                    onPress={() => { handleDelete() }}
+
+                />
             </View>
             <View style={{
                 // borderWidth: 2,
@@ -80,20 +149,16 @@ const PostsScreen = (props) => {
                     fontSize: 20
                 }}
                 >{props.postsContent}</Text>
-                <Image
+                {postsImage && <Image
 
                     style={{
                         height: 300,
                         width: "100%",
-                        // borderWidth: 2,
-                        // borderColor: "red",
-
-
                     }}
 
-                    source={require("../images/star.png")}
+                    source={{ uri: postsImage }}
 
-                />
+                />}
 
             </View>
             <View style={{
@@ -110,7 +175,7 @@ const PostsScreen = (props) => {
             }}
 
             >
-                <Pressable style={{
+                <TouchableOpacity style={{
                     // borderWidth: 2,
                     backgroundColor: "#e3e6ed",
                     width: 110,
@@ -125,10 +190,10 @@ const PostsScreen = (props) => {
                     <AntDesign name="like2" size={24} color="black" />
                     <Text style={{
                         marginLeft: 5
-                    }}>129</Text>
+                    }}>{props.likes && props.likes.length}</Text>
 
-                </Pressable>
-                <Pressable style={{
+                </TouchableOpacity>
+                <TouchableOpacity style={{
                     // borderWidth: 2,
                     backgroundColor: "#e3e6ed",
                     width: 110,
@@ -138,16 +203,16 @@ const PostsScreen = (props) => {
                     justifyContent: "center",
                     alignItems: "center"
                 }}
-                    onPress={() => { navigation.navigate("Posts_infor") }}
+                    onPress={() => { navigation.navigate("Posts_infor", { idPosts: props.idPosts }) }}
                 >
                     <Feather name="message-circle" size={24} color="black" />
                     <Text style={{
                         marginLeft: 5
                     }}
 
-                    >129</Text>
+                    >{props.comment && props.comment.length}</Text>
 
-                </Pressable>
+                </TouchableOpacity>
                 <Pressable style={{
                     // borderWidth: 2,
                     backgroundColor: "#e3e6ed",

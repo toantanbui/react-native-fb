@@ -33,3 +33,12 @@ export const removeValue = async (key) => {
         // remove error
     }
 }
+export const getAllKeys = async () => {
+    try {
+        const keys = await AsyncStorage.getAllKeys();
+        console.log('keys la ', keys);
+        return keys;
+    } catch (error) {
+        console.error("Error retrieving keys from AsyncStorage:", error);
+    }
+};

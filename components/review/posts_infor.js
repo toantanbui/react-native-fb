@@ -1,10 +1,15 @@
-import { View, Text, StyleSheet, Button, Modal, Image, Pressable, ScrollView, TextInput } from "react-native"
+import { View, Text, StyleSheet, Button, Modal, Image, Pressable, ScrollView, TextInput, TouchableOpacity } from "react-native"
 import { useNavigation, useRoute } from "@react-navigation/native";
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Feather from '@expo/vector-icons/Feather';
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from 'react-redux';
 import CommentScreen from "./comment";
+import * as actions from '../redux/actions';
+import { Buffer } from 'buffer';
+import { storeData, getData, removeValue } from '../storage/asyncStorage'
+import * as ImagePicker from 'expo-image-picker';
 
 
 
@@ -24,8 +29,160 @@ const styles = StyleSheet.create({
 const Posts_inforScreen = () => {
     const [list, setList] = useState([1, 1, 2, 3, 2, 12, 312, 312, 312, 2312])
     const navigation = useNavigation()
+    const dispatch = useDispatch()
+
+    const route = useRoute()
+    const [idPosts, setIdPosts] = useState('');
+    let dataPostsInfoRedux = useSelector(state => state.admin.dataPostsInfo)
+    let userInfoRedux = useSelector(state => state.admin.userInfo)
+
+    const [idUsers, setIdUsers] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [avatar, setAvatar] = useState('');
+    const [time, setTime] = useState('');
+
+    const [postsName, setPostsName] = useState('');
+    const [postsContent, setPostsContent] = useState('');
+    const [postsImage, setPostsImage] = useState('');
+    const [likes, setLikes] = useState(0);
+    const [comment, setComment] = useState('');
+
+    useEffect(() => {
+
+
+        getData('userInfo')
+            .then(data => {
+                let dataStorage = JSON.parse(data)
+                console.log("isLoggendIn", dataStorage.idUser)
+                dispatch(actions.handleGetPostsInfo({
+                    idPosts: route.params?.idPosts,
+                    idUsers: dataStorage.idUser
+                }))
+                setIdUsers(dataStorage.idUser)
+            })
+            .catch((e) => {
+                console.log(e)
+            })
+
+
+    }, [])
+
+    useEffect(() => {
+
+        if (userInfoRedux !== null) {
+            console.log('posting ', userInfoRedux)
+            setLastNameUsers(userInfoRedux[0].lastName)
+            setFirstNameUsers(userInfoRedux[0].firstName)
+
+            let imageBase64Users = ''
+            if (userInfoRedux[0].avatar) {
+                imageBase64Users = new Buffer(userInfoRedux[0].avatar, 'base64').toString('binary')
+                if (imageBase64Users) {
+
+
+                    setAvatarUsers(imageBase64Users)
+
+                }
+            }
+
+        }
+
+
+
+        if (dataPostsInfoRedux !== null) {
+            setIdPosts(dataPostsInfoRedux[0]._id)
+            setLastName(dataPostsInfoRedux[0].lastName)
+            setFirstName(dataPostsInfoRedux[0].firstName)
+            setTime(dataPostsInfoRedux[0].createAt)
+            setPostsContent(dataPostsInfoRedux[0].postsContent)
+            setComment(dataPostsInfoRedux[0].comment)
+
+
+            let imageBase64 = '';
+            if (dataPostsInfoRedux[0].postsImage) {
+                imageBase64 = new Buffer(dataPostsInfoRedux[0].postsImage, 'base64').toString('binary')
+                if (imageBase64) {
+
+
+                    setPostsImage(imageBase64)
+
+                }
+            }
+            let imageBase641 = ''
+            if (dataPostsInfoRedux[0].avatar) {
+                imageBase641 = new Buffer(dataPostsInfoRedux[0].avatar, 'base64').toString('binary')
+                if (imageBase641) {
+
+
+                    setAvatar(imageBase641)
+
+                }
+            }
+
+        }
+
+
+    }, [dataPostsInfoRedux, userInfoRedux])
+
+
+    const [lastNameUsers, setLastNameUsers] = useState('');
+    const [firstNameUsers, setFirstNameUsers] = useState('');
+    const [avatarUsers, setAvatarUsers] = useState('');
+
+
+    const [commentContent, setCommentContent] = useState('');
+    const [commentImage, setCommentImage] = useState('');
+
+
+
+    const onChangeInputContent = (event) => {
+        let data = event.nativeEvent.text
+        console.log("data la", data)
+        setCommentContent(data)
+    }
+
+    const selectImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+            base64: true,
+        });
+
+
+
+        if (!result.canceled) {
+
+            setCommentImage('data:image/png;base64,' + result.assets[0].base64);
+        }
+    };
+
+    let handleCreateComment = () => {
+        dispatch(actions.handleCreateComment({
+            idPosts: idPosts,
+
+            idUsers: idUsers,
+            firstName: firstNameUsers,
+            lastName: lastNameUsers,
+
+            commentContent: commentContent,
+            commentImage: commentImage,
+
+        }))
+        setCommentContent('')
+        setCommentImage('')
+
+    }
+
+
+
+
+
     return (
         <View style={styles.container}>
+            {console.log('ảnh', postsImage)}
             <ScrollView style={{
                 minHeight: 200
             }}>
@@ -59,12 +216,12 @@ const Posts_inforScreen = () => {
                             fontSize: 20,
                             fontWeight: "600"
                         }}
-                        >Bùi Tấn Toàn</Text>
+                        >{lastName} {firstName}</Text>
                         <Text style={{
 
                         }}
 
-                        >Thời gian</Text>
+                        >{time}</Text>
                     </View>
                     <MaterialCommunityIcons name="dots-horizontal" size={24} color="black" />
                 </View>
@@ -80,17 +237,18 @@ const Posts_inforScreen = () => {
                         minHeight: 100,
                         fontSize: 20
                     }}
-                    >noi dung bai viet</Text>
-                    <Image
+                    >{postsContent}</Text>
+
+                    {postsImage && <Image
+
                         style={{
                             height: 300,
                             width: "100%",
-                            // borderWidth: 2,
-                            // borderColor: "red",
-
-
                         }}
-                        source={require("../images/star.png")} />
+
+                        source={{ uri: postsImage }}
+
+                    />}
 
                 </View>
                 <View style={{
@@ -120,7 +278,7 @@ const Posts_inforScreen = () => {
                         <AntDesign name="like2" size={24} color="black" />
                         <Text style={{
                             marginLeft: 5
-                        }}>129</Text>
+                        }}>{likes}</Text>
 
                     </Pressable>
                     <Pressable style={{
@@ -138,7 +296,7 @@ const Posts_inforScreen = () => {
                             marginLeft: 5
                         }}
 
-                        >129</Text>
+                        >{comment && comment.length}</Text>
 
                     </Pressable>
                     <Pressable style={{
@@ -166,7 +324,9 @@ const Posts_inforScreen = () => {
                     paddingRight: 10,
                     paddingLeft: 10
                 }}>
-                    <AntDesign name="picture" size={24} color="black" />
+                    <AntDesign name="picture" size={24} color="black"
+                        onPress={() => { selectImage() }}
+                    />
                     <View style={{
                         borderColor: "#dde2e7",
                         borderWidth: 2,
@@ -181,7 +341,9 @@ const Posts_inforScreen = () => {
                         marginLeft: 10
                     }}>
                         <TextInput
+                            onChange={(event) => onChangeInputContent(event)}
                             multiline={true}
+                            value={commentContent}
                             style={{
                                 // borderColor: "#dde2e7",
                                 //borderWidth: 2,
@@ -198,10 +360,15 @@ const Posts_inforScreen = () => {
                             placeholder="Viết bình luận"
 
                         />
-                        <Feather name="send" size={24} color="black" />
+                        <TouchableOpacity>
+                            <Feather name="send" size={24} color="black"
+                                onPress={() => { handleCreateComment() }}
+                            />
+                        </TouchableOpacity>
                     </View>
 
                 </View>
+
                 <View style={{
                     height: "auto",
 
@@ -210,9 +377,31 @@ const Posts_inforScreen = () => {
                     paddingRight: 10,
                     paddingLeft: 10
                 }}>
-                    {list.map((item, index) => {
+                    {commentImage ? <Pressable style={{
+                        // borderColor: 'red',
+                        // borderWidth: 1,
+                        minHeight: 50,
+                        paddingLeft: 10
+                    }}>
+                        {commentImage && <Image source={{ uri: commentImage }} style={{
+                            minHeight: 50,
+                            width: 50
+                        }} />}
+                    </Pressable> : ''}
+                    {comment && comment.map((item, index) => {
                         return (
-                            <CommentScreen key={index} />
+                            <CommentScreen key={index}
+                                idPosts={idPosts}
+                                firstName={item.firstName}
+                                lastName={item.lastName}
+                                commentContent={item.commentContent}
+                                commentImage={item.commentImage}
+                                time={item.time}
+                                avatar={item.avatar}
+                                comment1={item.comment1}
+                                idComment={item._id}
+
+                            />
                         )
                     })}
                 </View>

@@ -1,5 +1,11 @@
 import { View, Text, StyleSheet, Button, Image, Pressable } from "react-native"
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from 'react-redux';
+import { storeData, getData, removeValue } from '../storage/asyncStorage'
+import { Buffer } from 'buffer';
+import Comment1Screen from "./comment1";
+
 
 const styles = StyleSheet.create({
     container: {
@@ -10,8 +16,57 @@ const styles = StyleSheet.create({
 })
 
 
-const CommentScreen = () => {
+
+const CommentScreen = (props) => {
     const navigation = useNavigation()
+    const dispatch = useDispatch()
+
+    let date = new Date(props.time);
+    let date1 = new Date();
+    let date2 = date1.getDate() - date.getDate();
+
+    const [avatar, setAvatar] = useState('');
+
+
+    const [commentContent, setCommentContent] = useState('');
+    const [commentImage, setCommentImage] = useState('');
+
+    useEffect(() => {
+        let imageBase64 = '';
+        if (props.avatar) {
+            imageBase64 = new Buffer(props.avatar, 'base64').toString('binary')
+            if (imageBase64) {
+
+
+                setAvatar(imageBase64)
+
+            }
+        }
+
+        let imageBase641 = '';
+        if (props.commentImage) {
+            imageBase641 = new Buffer(props.commentImage, 'base64').toString('binary')
+            if (imageBase641) {
+
+
+                setCommentImage(imageBase641)
+
+            }
+        }
+
+
+
+    }, [props.commentImage])
+
+    let [modalVisible, setModalVisible] = useState(false)
+
+    const handleOpenModal = () => {
+        setModalVisible(!modalVisible)
+    }
+
+
+
+
     return (
         <View style={{
             // borderColor: "red",
@@ -21,6 +76,7 @@ const CommentScreen = () => {
             paddingLeft: 10,
             paddingTop: 10
         }}>
+
             <Image
                 style={{
                     height: 50,
@@ -41,7 +97,7 @@ const CommentScreen = () => {
 
             }}>
                 <View style={{
-                    minHeight: 100,
+                    minHeight: 50,
                     width: "100%",
                     //borderWidth: 2,
                     //borderColor: "red",
@@ -53,24 +109,43 @@ const CommentScreen = () => {
 
                 }}>
                     <Text style={{
-                        fontSize: 20,
-                        fontWeight: "600"
+                        fontSize: 15,
+                        fontWeight: "600",
+                        marginLeft: 0
                     }}
-                    >Tên</Text>
-                    <Text>Note that some props are only available with multiline={true / false}.
-                        Additionally, border styles that apply to only one side of the element
-                        (e.g., borderBottomColor, borderLeftWidth, etc.) will not be applied if
-                        multiline=true.
-                        To achieve the same effect, you can wrap your TextInput in a View:
+                    >{props.firstName} {props.lastName}</Text>
+                    <Text style={{
+                        fontSize: 15,
+
+                        marginLeft: 5
+
+
+                    }}
+
+                    >
+                        {props.commentContent}
                     </Text>
+
                 </View>
+                <Pressable>
+                    {commentImage && <Image
+                        style={{
+                            height: 200,
+                            width: 200,
+                            borderWidth: 2,
+                            borderColor: "#e3e6ed",
+                            borderRadius: 10,
+
+                        }}
+                        source={{ uri: commentImage }} />}
+                </Pressable>
 
                 <View style={{
                     flexDirection: "row",
                     paddingLeft: 10,
                     marginBottom: 5
                 }}>
-                    <Text>13 phut</Text>
+                    <Text>{date2} ngày</Text>
                     <Pressable style={{
                         marginLeft: 10,
 
@@ -84,7 +159,7 @@ const CommentScreen = () => {
                         marginRight: 10,
                         fontWeight: "600"
                     }}
-                        onPress={() => { navigation.navigate("comment1") }}
+                        onPress={() => { handleOpenModal() }}
                     >
                         <Text style={{
                             fontWeight: "600"
@@ -92,16 +167,32 @@ const CommentScreen = () => {
                     </Pressable  >
                     <Text>60</Text>
                 </View>
-                <Pressable style={{
+
+                {props.comment1.length > 0 ? <Pressable style={{
                     paddingLeft: 10
                 }}
-                    onPress={() => { navigation.navigate("comment1") }}
+
                 >
                     <Text style={{
                         fontWeight: "600",
                         fontSize: 15
-                    }}>7 lượt bình luận</Text>
-                </Pressable>
+                    }}
+                        onPress={() => { handleOpenModal() }}
+                    >Có {props.comment1 && props.comment1.length} phản hồi</Text>
+
+
+                </Pressable> : ''}
+                <Comment1Screen
+                    modalVisible={modalVisible}
+                    handleOpenModal={handleOpenModal}
+                    lastName={props.lastName}
+                    firstName={props.firstName}
+                    commentContent={props.commentContent}
+                    time={props.time}
+                    comment1={props.comment1}
+                    idPosts={props.idPosts}
+                    idComment={props.idComment}
+                />
 
             </View>
         </View>

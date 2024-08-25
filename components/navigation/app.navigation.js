@@ -48,9 +48,7 @@ export default function AppNavigation() {
                 <Stack.Screen name="homefb" component={HomefbScreen}
                     options={{ title: "bài viét", headerShown: false }}
                 />
-                <Stack.Screen name="comment1" component={Comment1Screen}
-                    options={{ title: "Bình luận", headerShown: true }}
-                />
+
                 <Stack.Screen name="posting" component={PostingScreen}
                     options={{ title: "Tạo bài viết", headerShown: true }}
                 />

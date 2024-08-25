@@ -2,7 +2,8 @@ import actionTypes from "./actionTypes";
 
 import {
     getDataUser, createUserApi, LoginUserApi, handleGetPostByTimeApi,
-    handleGeUserInfoApi
+    handleGeUserInfoApi, handleCreatePostsApi, handleGetPostsInfoApi,
+    handleCreateCommentApi, handleCreateComment1Api
 
 } from '../../service'
 
@@ -157,3 +158,106 @@ export const handleGetUserInfo = (data1) => {
     }
 }
 
+export const handleCreatePosts = (data1) => {
+    console.log("request la ", data1)
+    return async (dispatch, getState) => {
+        try {
+            let res = await handleCreatePostsApi(data1);
+
+            if (res.data.errCode === 0) {
+                dispatch({
+                    type: actionTypes.CREATE_POSTS_API,
+                    errMessage: res.data.errMessage,
+                    data: res.data.data,
+
+
+                })
+            }
+
+
+        } catch (e) {
+            console.log(e)
+
+        }
+    }
+}
+
+export const handleGetPostsInfo = (data1) => {
+    console.log('da chay')
+    return async (dispatch, getState) => {
+
+
+        try {
+            let res = await handleGetPostsInfoApi({ idPosts: data1.idPosts });
+
+            if (res.data.errCode === 0) {
+                dispatch({
+                    type: actionTypes.GET_POSTS_INFO_API,
+                    errMessage: res.data.errMessage,
+                    data: res.data.data,
+
+
+                })
+            }
+
+            await dispatch(handleGetUserInfo({ idUsers: data1.idUsers }))
+
+
+        } catch (e) {
+            console.log(e)
+
+        }
+    }
+}
+
+export const handleCreateComment = (data1) => {
+    console.log("request la ", data1)
+    return async (dispatch, getState) => {
+        try {
+            let res = await handleCreateCommentApi(data1);
+
+            if (res.data.errCode === 0) {
+                dispatch({
+                    type: actionTypes.CREATE_COMMENT_API,
+                    errMessage: res.data.errMessage,
+
+
+
+                })
+            }
+
+            await dispatch(handleGetPostsInfo(data1))
+
+
+        } catch (e) {
+            console.log(e)
+
+        }
+    }
+}
+
+export const handleCreateComment1 = (data1) => {
+    console.log("request la ", data1)
+    return async (dispatch, getState) => {
+        try {
+            let res = await handleCreateComment1Api(data1);
+
+            if (res.data.errCode === 0) {
+                dispatch({
+                    type: actionTypes.CREATE_COMMENT_API,
+                    errMessage: res.data.errMessage,
+
+
+
+                })
+            }
+
+            await dispatch(handleGetPostsInfo(data1))
+
+
+        } catch (e) {
+            console.log(e)
+
+        }
+    }
+}

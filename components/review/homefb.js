@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Button, Pressable, Image, ScrollView, FlatList } from "react-native"
+import { View, Text, StyleSheet, Button, Pressable, Image, ScrollView, FlatList, TouchableOpacity } from "react-native"
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Feather from '@expo/vector-icons/Feather';
@@ -8,6 +8,7 @@ import { useState, useEffect } from "react"
 import PostsScreen from "./posts";
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from '../redux/actions';
+import { storeData, getData, removeValue, getAllKeys } from '../storage/asyncStorage'
 const styles = StyleSheet.create({
     container: {
         fontSize: 10,
@@ -22,6 +23,8 @@ const HomefbScreen = () => {
     const navigation = useNavigation()
     //const [list, setList] = useState([1, 1, 2, 3, 2, 12, 312, 312, 312, 2312])
     const dispatch = useDispatch()
+    const map = new Map()
+    // map.set('list', useSelector(state => state.admin.dataGetPostsByTime))
 
     let dataGetPostsByTimeRedux = useSelector(state => state.admin.dataGetPostsByTime)
     const [list, setList] = useState([]);
@@ -30,20 +33,47 @@ const HomefbScreen = () => {
         dispatch(actions.handleGetPostByTime({}))
     }, [])
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        setList(dataGetPostsByTimeRedux)
-
-    }, [dataGetPostsByTimeRedux])
+    //     setList(dataGetPostsByTimeRedux)
 
 
+    // }, [dataGetPostsByTimeRedux])
 
 
+    const handlePression = async () => {
+        await getAllKeys()
+            .then(data => {
+
+                console.log("isLoggendIn", data)
+
+
+            })
+            .catch((e) => {
+                console.log(e)
+            })
+        await getData('userInfo')
+            .then(data => {
+
+                console.log("key-2", data)
+
+
+            })
+            .catch((e) => {
+                console.log(e)
+            })
+
+    }
+
+    const handleReload = () => {
+        dispatch(actions.handleGetPostByTime({}))
+    }
 
 
 
     return (
         <View style={styles.container}>
+            {console.log('storage state list', list)}
             <View style={{
                 // borderBottomWidth: 1,
                 // borderBottomColor: "red",
@@ -89,7 +119,9 @@ const HomefbScreen = () => {
                         marginLeft: 10,
                         backgroundColor: "#e6e5ed"
                     }}>
-                        <Ionicons name="add" size={27} color="black" />
+                        <Ionicons name="add" size={27} color="black"
+                            onPress={() => { handlePression() }}
+                        />
                     </View>
                     <View style={{
                         // borderWidth: 1,
@@ -134,7 +166,11 @@ const HomefbScreen = () => {
                 // backgroundColor: "red"
             }}>
                 <View>
-                    <Feather name="home" size={24} color="black" />
+                    <TouchableOpacity>
+                        <Feather name="home" size={24} color="black"
+                            onPress={() => { handleReload() }}
+                        />
+                    </TouchableOpacity>
                 </View>
                 <View>
                     <Feather name="users" size={24} color="black" />
@@ -179,7 +215,7 @@ const HomefbScreen = () => {
                         onPress={() => { navigation.navigate("PersonalPage") }}
                     />
                 </Pressable>
-                <Pressable style={{
+                <TouchableOpacity style={{
                     // borderColor: "#dde2e7",
                     // borderWidth: 2,
                     height: 50,
@@ -202,7 +238,7 @@ const HomefbScreen = () => {
                         fontSize: 20,
                         marginLeft: 10
                     }}>Đăng cập nhập trạng thái</Text>
-                </Pressable >
+                </TouchableOpacity >
                 <AntDesign name="picture" size={24} color="black" />
             </View>
 
@@ -211,8 +247,8 @@ const HomefbScreen = () => {
             }}
             >
 
-                <FlatList
-                    data={list}
+                {dataGetPostsByTimeRedux && <FlatList
+                    data={dataGetPostsByTimeRedux}
                     renderItem={({ item, index }) => {
                         return (
                             <PostsScreen key={index}
@@ -224,11 +260,13 @@ const HomefbScreen = () => {
                                 postsImage={item.postsImage}
                                 comment={item.comment}
                                 time={item.createdAt}
+                                likes={item.likes}
+                                idPosts={item._id}
                             />
                         )
                     }}
 
-                />
+                />}
             </View>
             {/* {
                     list.map((item, index) => {

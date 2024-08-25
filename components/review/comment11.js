@@ -1,8 +1,10 @@
 import { View, Text, StyleSheet, Button, Image, Pressable, ScrollView, TextInput } from "react-native"
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Feather from '@expo/vector-icons/Feather';
+import * as actions from '../redux/actions';
+import { useSelector, useDispatch } from 'react-redux';
 
 const styles = StyleSheet.create({
     container: {
@@ -13,12 +15,69 @@ const styles = StyleSheet.create({
 })
 
 
-const Comment11Screen = () => {
+const Comment11Screen = (props) => {
     const navigation = useNavigation()
+    const dispatch = useDispatch()
     const [list, setList] = useState([1, 1, 2, 3, 2, 12, 312, 312, 312, 2312])
     let [isShow, setIsShow] = useState(false)
+
+
+    let date = new Date(props.time);
+    let date1 = new Date();
+    let date2 = date1.getDate() - date.getDate();
+
+    const [commentContent, setCommentContent] = useState('');
+    const [commentImage, setCommentImage] = useState('');
+
+
+    useEffect(() => {
+
+
+
+
+
+
+
+
+
+    }, [props.firstNameUsers])
+
+
+
+
+    const onChangeInputContent = (event) => {
+        let data = event.nativeEvent.text
+        let data1 = `${props.lastName}  ${props.firstName}, ` + data
+        console.log("data la", data)
+        setCommentContent(data1)
+    }
+
+    let handleCreateComment1 = () => {
+
+        dispatch(actions.handleCreateComment1({
+            idPosts: props.idPosts,
+            idComment: props.idComment,
+            idUsers: props.idUsers,
+            firstName: props.firstNameUsers,
+            lastName: props.lastNameUsers,
+            avatar: props.avatarUsers,
+            commentContent: commentContent,
+            commentImage: commentImage,
+
+        }))
+        setCommentContent('')
+
+
+    }
+
+
+
+
+
+
     return (
         <View>
+
             <View style={{
                 // borderColor: "red",
                 // borderWidth: 2,
@@ -59,15 +118,12 @@ const Comment11Screen = () => {
 
                     }}>
                         <Text style={{
-                            fontSize: 20,
+                            fontSize: 15,
                             fontWeight: "600"
                         }}
-                        >Tên</Text>
-                        <Text>Note that some props are only available with multiline={true / false}.
-                            Additionally, border styles that apply to only one side of the element
-                            (e.g., borderBottomColor, borderLeftWidth, etc.) will not be applied if
-                            multiline=true.
-                            To achieve the same effect, you can wrap your TextInput in a View:
+                        >{props.lastName} {props.firstName}</Text>
+                        <Text>
+                            {props.commentContent}
                         </Text>
                     </View>
 
@@ -76,7 +132,7 @@ const Comment11Screen = () => {
                         paddingLeft: 10,
                         marginBottom: 5
                     }}>
-                        <Text>13 phut</Text>
+                        <Text>{date2} ngày</Text>
                         <Pressable style={{
                             marginLeft: 10,
 
@@ -124,7 +180,10 @@ const Comment11Screen = () => {
                         height: 70,
                         marginLeft: 10
                     }}>
+                        {console.log('commentContent', commentContent)}
                         <TextInput
+                            onChange={(event) => onChangeInputContent(event)}
+                            // value={commentContent}
                             multiline={true}
                             style={{
                                 // borderColor: "#dde2e7",
@@ -142,7 +201,9 @@ const Comment11Screen = () => {
                             placeholder="Viết bình luận"
 
                         />
-                        <Feather name="send" size={24} color="black" />
+                        <Feather name="send" size={24} color="black"
+                            onPress={() => { handleCreateComment1() }}
+                        />
                     </View>
 
                 </View> : ''}

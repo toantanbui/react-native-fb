@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Button, Pressable, Image, TextInput } from "react-native"
+import { View, Text, StyleSheet, Button, Pressable, Image, TextInput, TouchableOpacity } from "react-native"
 import { useNavigation, useRoute } from "@react-navigation/native";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useState, useEffect } from "react";
@@ -25,13 +25,14 @@ const PostingScreen = () => {
 
     const [idUsers, setIdUsers] = useState('');
     const [lastName, setLastName] = useState('');
-    const [firsttName, setFirstName] = useState('');
+    const [firstName, setFirstName] = useState('');
     const [avatar, setAvatar] = useState('');
 
     const [postsName, setPostsName] = useState('');
     const [postsContent, setPostsContent] = useState('');
-    const [postsImage, setPostsImage] = useState('data:image/png;base64,');
+    const [postsImage, setPostsImage] = useState('');
     let userInfoRedux = useSelector(state => state.admin.userInfo)
+    let errMessageCreatePostsRedux = useSelector(state => state.admin.errMessageCreatePosts)
 
     useEffect(() => {
         getData('userInfo')
@@ -52,9 +53,9 @@ const PostingScreen = () => {
         if (userInfoRedux !== null) {
             console.log('posting ', userInfoRedux)
             setLastName(userInfoRedux[0].lastName)
-            setFirstName(userInfoRedux[0].firsttName)
-            setPostsName(userInfoRedux[0].postsName)
-            setPostsContent(userInfoRedux[0].postsContent)
+            setFirstName(userInfoRedux[0].firstName)
+            // setPostsName(userInfoRedux[0].postsName)
+            // setPostsContent(userInfoRedux[0].postsContent)
         }
 
     }, [userInfoRedux])
@@ -68,16 +69,36 @@ const PostingScreen = () => {
             base64: true,
         });
 
-        console.log("base64 la", result.assets[0].base64, " xin chao");
+        //console.log("base64 la", result.assets[0].base64, " xin chao");
         //let a = new Buffer(result.assets[0].base64, 'base64').toString('binary')
 
         if (!result.canceled) {
             // setPostsImage(result.assets[0].uri);
-            setPostsImage(postsImage + result.assets[0].base64);
+            setPostsImage('data:image/png;base64,' + result.assets[0].base64);
         }
     };
 
+    let handleCreatePosts = () => {
+        dispatch(actions.handleCreatePosts({
+            idUsers: idUsers,
+            firstName: firstName,
+            lastName: lastName,
+            avatar: avatar,
 
+            postsName: postsName,
+            postsContent: postsContent,
+            postsImage: postsImage
+
+        }))
+        setPostsContent('')
+        setPostsImage('')
+    }
+
+    const onChangeInputContent = (event) => {
+        let data = event.nativeEvent.text
+        console.log("data la", data)
+        setPostsContent(data)
+    }
 
 
 
@@ -132,6 +153,8 @@ const PostingScreen = () => {
 
                 }}>
                     <TextInput
+                        onChange={(event) => onChangeInputContent(event)}
+                        value={postsContent}
                         multiline={true}
                         //Đưa con trỏ lên đầu hàng
                         textAlignVertical="top"
@@ -152,38 +175,51 @@ const PostingScreen = () => {
                     />
                 </View>
             </View>
-            <Pressable style={{
+            <TouchableOpacity style={{
                 // borderColor: "red",
                 // borderWidth: 2,
                 padding: 10,
                 flexDirection: "row",
                 alignItems: "center"
-            }}>
+            }}
+                onPress={() => { selectImage() }}
+            >
                 <AntDesign name="picture" size={24} color="black"
-                    onPress={() => { selectImage() }}
+
                 />
                 <Text style={{
                     marginLeft: 10
                 }}
 
                 >Ảnh/video</Text>
-            </Pressable>
-            <Pressable style={{
-                borderColor: 'red',
-                borderWidth: 1,
-                minHeight: 50
+            </TouchableOpacity>
+            {postsImage ? <Pressable style={{
+                // borderColor: 'red',
+                // borderWidth: 1,
+                minHeight: 50,
+                paddingLeft: 10
             }}>
                 {postsImage && <Image source={{ uri: postsImage }} style={{
                     minHeight: 50,
                     width: 50
                 }} />}
-            </Pressable>
+            </Pressable> : ''}
             <View style={{
                 padding: 10
             }}>
                 <Button title="ĐĂNG"
-
+                    onPress={() => { handleCreatePosts() }}
                 />
+            </View>
+            <View>
+                <Text style={{
+                    fontSize: 20,
+                    color: 'red',
+                    marginTop: 5,
+                    paddingLeft: 10
+                }}
+
+                >{errMessageCreatePostsRedux}</Text>
             </View>
         </View>
     )
