@@ -39,11 +39,18 @@ const handleCreateLikeStatusApi = (data) => {
     return instance.post('/createlikePosts', data);
 }
 
+const handleGetPostByPersonalPageApi = (data) => {
+    return instance.post('/getPostByPersonalPage', data);
+}
+
+const handleDeletePostsApi = (data) => {
+    return instance.post('/deletePost', data);
+}
 
 
 
 export {
     getDataUser, createUserApi, LoginUserApi, handleGetPostByTimeApi, handleGeUserInfoApi, handleCreatePostsApi,
     handleGetPostsInfoApi, handleCreateCommentApi, handleCreateComment1Api,
-    handleCreateLikeStatusApi
+    handleCreateLikeStatusApi, handleGetPostByPersonalPageApi, handleDeletePostsApi
 }

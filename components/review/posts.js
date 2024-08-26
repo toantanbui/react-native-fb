@@ -54,21 +54,21 @@ const PostsScreen = (props) => {
             .catch((e) => {
                 console.log(e)
             })
-        if (props.likeStatus.length > 0) {
+        // if (props.likeStatus.length > 0) {
 
-            console.log('props.likeStatus', props.likeStatus)
-            let filter = []
-            filter = filerStatus(props.likeStatus, idUsers);
-            if (filter.length > 0) {
-                console.log('FILTER là', filter[0].status)
-                setStatus(filter[0].status)
-            }
-
-
+        //     console.log('props.likeStatus', props.likeStatus)
+        //     let filter = []
+        //     filter = filerStatus(props.likeStatus, idUsers);
+        //     if (filter.length > 0) {
+        //         console.log('FILTER là', filter[0].status)
+        //         setStatus(filter[0].status)
+        //     }
 
 
 
-        }
+
+
+        // }
 
 
     }, [])
@@ -76,19 +76,16 @@ const PostsScreen = (props) => {
 
 
     useEffect(() => {
+        let filter = []
+        if (props.likeStatus && props.likeStatus.length > 0) {
 
-        if (props.likeStatus.length > 0) {
-            let filter = []
             console.log('props.likeStatus', props.likeStatus)
             filter = filerStatus(props.likeStatus, idUsers);
             console.log('FILTER là', filter, "xin chao")
-            if (filter.length > 0) {
+            if (filter && filter.length > 0) {
 
                 setStatus(filter[0].status)
             }
-
-
-
 
 
         }
@@ -134,7 +131,7 @@ const PostsScreen = (props) => {
                     style: 'cancel'
                 },
                 {
-                    text: 'ok', onPress: () => console.log('ok Pressed')
+                    text: 'ok', onPress: () => handleDeletePosts()
                 }
             ]
         )
@@ -158,6 +155,17 @@ const PostsScreen = (props) => {
 
     }
 
+    const handleDeletePosts = () => {
+        dispatch(actions.handleDeletePosts({
+
+            idUsers: idUsers,
+            idPosts: props.idPosts,
+
+        }))
+    }
+
+
+
 
 
 
@@ -175,7 +183,7 @@ const PostsScreen = (props) => {
                 padding: 10
             }}>
                 <Pressable
-                    onPress={() => { navigation.navigate("PersonalPage") }}
+
                 >
                     <Image
                         style={{
@@ -210,10 +218,15 @@ const PostsScreen = (props) => {
                     >{date.toLocaleString()}</Text>
                 </View>
                 {console.log("idPost post", props.idPosts)}
-                <MaterialCommunityIcons name="dots-horizontal" size={24} color="black"
+                {props.delet ? <MaterialCommunityIcons name="dots-horizontal" size={24} color="black"
                     onPress={() => { handleDelete() }}
 
-                />
+                /> :
+                    <MaterialCommunityIcons name="dots-horizontal" size={24} color="black"
+
+
+                    />
+                }
             </View>
             <View style={{
                 // borderWidth: 2,

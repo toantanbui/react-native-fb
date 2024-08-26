@@ -3,7 +3,8 @@ import actionTypes from "./actionTypes";
 import {
     getDataUser, createUserApi, LoginUserApi, handleGetPostByTimeApi,
     handleGeUserInfoApi, handleCreatePostsApi, handleGetPostsInfoApi,
-    handleCreateCommentApi, handleCreateComment1Api, handleCreateLikeStatusApi
+    handleCreateCommentApi, handleCreateComment1Api, handleCreateLikeStatusApi,
+    handleGetPostByPersonalPageApi, handleDeletePostsApi
 
 } from '../../service'
 
@@ -280,6 +281,59 @@ export const handleCreateLikeStatus = (data1) => {
 
             await dispatch(handleGetPostByTime())
             await dispatch(handleGetPostsInfo({ idPosts: data1.idPosts }))
+
+
+
+
+
+        } catch (e) {
+            console.log(e)
+
+        }
+    }
+}
+
+export const handleGetPostByPersonalPage = (data1) => {
+    console.log("request la ", data1)
+    return async (dispatch, getState) => {
+        try {
+            let res = await handleGetPostByPersonalPageApi(data1);
+
+            if (res.data.errCode === 0) {
+                dispatch({
+                    type: actionTypes.GET_POSTS_PERSONALPAGE,
+                    errMessage: res.data.errMessage,
+                    data: res.data.data,
+
+
+                })
+            }
+
+        } catch (e) {
+            console.log(e)
+
+        }
+    }
+}
+
+export const handleDeletePosts = (data1) => {
+    console.log("request la ", data1)
+    return async (dispatch, getState) => {
+        try {
+            let res = await handleDeletePostsApi({ idPosts: data1.idPosts });
+
+            if (res.data.errCode === 0) {
+                dispatch({
+                    type: actionTypes.CREATE_COMMENT_API,
+                    errMessage: res.data.errMessage,
+
+
+
+                })
+            }
+
+
+            await dispatch(handleGetPostByPersonalPage({ idUsers: data1.idUsers }))
 
 
 

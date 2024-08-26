@@ -111,12 +111,12 @@ const Posts_inforScreen = () => {
             setComment(dataPostsInfoRedux[0].comment)
             setLikes(dataPostsInfoRedux[0].likes)
 
-            if (dataPostsInfoRedux[0].likeStatus.length > 0) {
+            if (dataPostsInfoRedux[0].likeStatus && dataPostsInfoRedux[0].likeStatus.length > 0) {
 
                 let filter = []
                 filter = filerStatus(dataPostsInfoRedux[0].likeStatus, idUsers);
                 console.log('FILTER là', filter, "xin chao", filter.length)
-                if (filter.length > 0) {
+                if (filter && filter.length > 0) {
 
                     setStatus(filter[0].status)
                 }

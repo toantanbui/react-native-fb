@@ -13,7 +13,8 @@ const initialState = {
 
     errMessageCreateUser: '',
     dataGetPostsByTime: null,
-    dataPostsInfo: null
+    dataPostsInfo: null,
+    dataPostsPersonalPage: null
 
 
 
@@ -72,6 +73,16 @@ const adminReducer = (state = initialState, action) => {
             return {
                 ...state,
             }
+        case actionTypes.GET_POSTS_PERSONALPAGE:
+
+            state.dataPostsPersonalPage = action.data
+
+            console.log('action', action)
+
+            return {
+                ...state,
+            }
+
 
 
 

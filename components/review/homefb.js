@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Button, Pressable, Image, ScrollView, FlatList, TouchableOpacity } from "react-native"
+import { View, Text, StyleSheet, Button, Pressable, Image, ScrollView, FlatList, TouchableOpacity, Alert } from "react-native"
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Feather from '@expo/vector-icons/Feather';
@@ -28,6 +28,7 @@ const HomefbScreen = () => {
 
     let dataGetPostsByTimeRedux = useSelector(state => state.admin.dataGetPostsByTime)
     const [list, setList] = useState([]);
+    const [delet, setDelet] = useState(false);
 
     useEffect(() => {
         dispatch(actions.handleGetPostByTime({}))
@@ -68,6 +69,28 @@ const HomefbScreen = () => {
     const handleReload = () => {
         dispatch(actions.handleGetPostByTime({}))
     }
+
+    const handleDelete = () => {
+        Alert.alert("Đăng xuất", "Bạn có chắc muốn đăng xuất?",
+            [
+                {
+                    text: 'Cancel',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel'
+                },
+                {
+                    text: 'ok', onPress: () => handleLogout()
+                }
+            ]
+        )
+    }
+    const handleLogout = () => {
+        removeValue('userInfo')
+        navigation.navigate("Login")
+
+    }
+
+
 
 
 
@@ -148,7 +171,9 @@ const HomefbScreen = () => {
                         marginLeft: 10,
                         backgroundColor: "#e6e5ed"
                     }}>
-                        <Feather name="menu" size={24} color="black" />
+                        <Feather name="menu" size={24} color="black"
+                            onPress={() => { handleDelete() }}
+                        />
                     </View>
 
                 </View>
@@ -263,6 +288,8 @@ const HomefbScreen = () => {
                                 likes={item.likes}
                                 idPosts={item._id}
                                 likeStatus={item.likeStatus}
+
+                                delet={delet}
 
 
                             />

@@ -2,8 +2,11 @@ import { View, Text, StyleSheet, Button, Image, Pressable, ScrollView } from "re
 import { useNavigation, useRoute } from "@react-navigation/native";
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PostsScreen from "./posts";
+import * as actions from '../redux/actions';
+import { useSelector, useDispatch } from 'react-redux';
+import { storeData, getData, removeValue } from '../storage/asyncStorage'
 
 const styles = StyleSheet.create({
     container: {
@@ -25,6 +28,63 @@ const styles = StyleSheet.create({
 const PersonalScreen = () => {
     const navigation = useNavigation()
     const [list, setList] = useState([1, 1, 2, 3, 2, 12, 312, 312, 312, 2312])
+    const dispatch = useDispatch()
+    let dataPostsPersonalPageRedux = useSelector(state => state.admin.dataPostsPersonalPage)
+
+    useEffect(() => {
+
+
+        getData('userInfo')
+            .then(data => {
+                let dataStorage = JSON.parse(data)
+                console.log("isLoggendIn", dataStorage.idUser)
+                dispatch(actions.handleGetPostByPersonalPage({
+
+                    idUsers: dataStorage.idUser
+                }))
+
+            })
+            .catch((e) => {
+                console.log(e)
+            })
+
+
+    }, [])
+
+
+    useEffect(() => {
+
+        if (dataPostsPersonalPageRedux !== null) {
+            console.log('dataPostsPersonalPageRedux', dataPostsPersonalPageRedux)
+            setFirstName(dataPostsPersonalPageRedux[0].firstName)
+            setLastName(dataPostsPersonalPageRedux[0].lastName)
+            setPosts(dataPostsPersonalPageRedux[0].posts)
+        }
+
+
+
+    }, [dataPostsPersonalPageRedux])
+
+    const [lastName, setLastName] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [posts, setPosts] = useState([]);
+
+
+    const [delet, setDelet] = useState(true);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     return (
         <ScrollView>
             <View style={styles.container}>
@@ -46,7 +106,7 @@ const PersonalScreen = () => {
                                 borderRadius: 50,
 
                             }}
-                            source={require("../images/star.png")} />
+                            source={require("../images/anh.jpg")} />
 
 
 
@@ -63,7 +123,7 @@ const PersonalScreen = () => {
                             fontSize: 30,
                             fontWeight: "600"
                         }}
-                        >Bùi Tấn Toàn</Text>
+                        >{lastName} {firstName}</Text>
                         <Text>221 người bạn</Text>
 
                     </View>
@@ -158,9 +218,23 @@ const PersonalScreen = () => {
                     </View>
                 </View>
                 <View>
-                    {list.map((item, index) => {
+                    {posts && posts.map((item, index) => {
                         return (
-                            <PostsScreen key={index} />
+                            <PostsScreen key={index}
+                                firstName={item.firstName}
+                                lastName={item.lastName}
+                                avatar={item.avatar}
+                                postsName={item.postsName}
+                                postsContent={item.postsContent}
+                                postsImage={item.postsImage}
+                                comment={item.comment}
+                                time={item.createdAt}
+                                likes={item.likes}
+                                idPosts={item._id}
+                                likeStatus={item.likeStatus}
+
+                                delet={delet}
+                            />
                         )
 
                     })}
