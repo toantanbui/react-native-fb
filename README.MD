@@ -6,6 +6,6 @@ https://nodejs.org/download/release/v20.14.0/
 - npm i
 2.Chạy app chế độ tunnel
 - npm start
-2.Chạy app chế độ local
+3.Chạy app chế độ local
 - npm run dev
 
