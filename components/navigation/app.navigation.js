@@ -11,6 +11,7 @@ import HomefbScreen from "../review/homefb";
 
 import PostingScreen from "../review/posting";
 import QR from "../qr";
+import User_inforScreen from "../review/user_infor";
 
 
 
@@ -22,6 +23,9 @@ export default function AppNavigation() {
             <Stack.Navigator initialRouteName="Login">
                 <Stack.Screen name="Signup" component={SignupScreen}
                     options={{ title: "Signup", headerShown: false }}
+                />
+                <Stack.Screen name="userInfor" component={User_inforScreen}
+                    options={{ title: "Thông tin cá nhân", headerShown: true }}
                 />
 
 

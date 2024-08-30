@@ -47,10 +47,16 @@ const handleDeletePostsApi = (data) => {
     return instance.post('/deletePost', data);
 }
 
+const handleUpdateUserInfoApi = (data) => {
+    return instance.post('/updateUserInfo', data);
+}
+
+
 
 
 export {
     getDataUser, createUserApi, LoginUserApi, handleGetPostByTimeApi, handleGeUserInfoApi, handleCreatePostsApi,
     handleGetPostsInfoApi, handleCreateCommentApi, handleCreateComment1Api,
-    handleCreateLikeStatusApi, handleGetPostByPersonalPageApi, handleDeletePostsApi
+    handleCreateLikeStatusApi, handleGetPostByPersonalPageApi, handleDeletePostsApi,
+    handleUpdateUserInfoApi
 }

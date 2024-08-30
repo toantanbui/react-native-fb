@@ -4,7 +4,7 @@ import {
     getDataUser, createUserApi, LoginUserApi, handleGetPostByTimeApi,
     handleGeUserInfoApi, handleCreatePostsApi, handleGetPostsInfoApi,
     handleCreateCommentApi, handleCreateComment1Api, handleCreateLikeStatusApi,
-    handleGetPostByPersonalPageApi, handleDeletePostsApi
+    handleGetPostByPersonalPageApi, handleDeletePostsApi, handleUpdateUserInfoApi
 
 } from '../../service'
 
@@ -334,6 +334,36 @@ export const handleDeletePosts = (data1) => {
 
 
             await dispatch(handleGetPostByPersonalPage({ idUsers: data1.idUsers }))
+
+
+
+
+
+        } catch (e) {
+            console.log(e)
+
+        }
+    }
+}
+
+export const handleUpdateUserInfo = (data1) => {
+    console.log("request la ", data1)
+    return async (dispatch, getState) => {
+        try {
+            let res = await handleUpdateUserInfoApi(data1);
+
+            if (res.data.errCode === 0) {
+                dispatch({
+                    type: actionTypes.UPDATE_USER_INFO,
+                    errMessage: res.data.errMessage,
+
+
+
+                })
+            }
+
+
+            await dispatch(handleGetUserInfo({ idUsers: data1.idUsers }))
 
 
 

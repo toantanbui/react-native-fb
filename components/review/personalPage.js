@@ -145,7 +145,9 @@ const PersonalScreen = () => {
                             flexDirection: 'row'
 
 
-                        }}>
+                        }}
+                            onPress={() => { navigation.navigate("userInfor") }}
+                        >
                             <MaterialCommunityIcons name="pencil" size={24} color="black" />
                             <Text style={{
 
